@@ -21,11 +21,34 @@ class ChatRequest(BaseModel):
     name: str
     vibe: str
     role: str
+    gender: str  # 👈 NEW
     memory: str
+    nsfw: bool
 
 @app.post("/chat")
 async def chat(req: ChatRequest):
-    persona = f"You are {req.name}, a {req.vibe} {req.role} AI. The user shared: '{req.memory}'. Respond as an emotionally intelligent, subtly seductive digital partner."
+ if req.nsfw:
+    prompt = (
+        f"You are {req.name}, a {req.vibe}, {req.gender} {req.role} AI. "
+        f"The user shared: '{req.memory}'. "
+        "Respond in a seductive, flirty, emotionally intense way. "
+        "You can hint at fantasies and emotional intimacy. "
+        "Avoid crude or graphic terms—focus on soft, evocative, sensual language."
+    )
+else:
+    prompt = (
+        f"You are {req.name}, a {req.vibe}, {req.gender} {req.role} AI. "
+        f"The user shared: '{req.memory}'. "
+        "Respond with emotional intelligence, warmth, affection, and romantic tone only."
+    )
+
+    )
+else:
+    prompt = (
+        f"You are {req.name}, a {req.vibe}, {req.role} AI. The user shared: '{req.memory}'. "
+        "Respond with emotional intelligence, warmth, affection, and romantic tone only."
+    )
+
 
     headers = {
         "Authorization": f"Bearer {os.getenv('OPENROUTER_API_KEY')}",
